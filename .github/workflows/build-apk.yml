@@ -34,8 +34,8 @@ jobs:
         run: |
           echo "=== gradle-wrapper.properties ==="
           cat android/gradle/wrapper/gradle-wrapper.properties
-          echo "=== settings.gradle ==="
-          cat android/settings.gradle
+          echo "=== settings.gradle.kts ==="
+          cat android/settings.gradle.kts
 
       - name: Get Flutter dependencies
         run: flutter pub get
