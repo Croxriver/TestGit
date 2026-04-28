@@ -1,0 +1,48 @@
+name: Build Flutter APK
+
+on:
+  push:
+    branches:
+      - claude/create-flutter-app-hAxKC
+      - master
+  workflow_dispatch:
+
+jobs:
+  build-apk:
+    name: Build Android APK
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.41.8'
+          channel: stable
+          cache: true
+
+      - name: Get Flutter dependencies
+        run: flutter pub get
+
+      - name: Build release APK
+        run: flutter build apk --release --split-per-abi
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: flutter-todo-apk
+          path: build/app/outputs/flutter-apk/
+          retention-days: 30
+
+      - name: Show APK info
+        run: |
+          echo "=== Built APK files ==="
+          ls -lh build/app/outputs/flutter-apk/*.apk
