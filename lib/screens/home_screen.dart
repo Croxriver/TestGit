@@ -3,6 +3,8 @@ import '../models/todo.dart';
 import '../widgets/todo_item.dart';
 import 'add_todo_screen.dart';
 import 'theme_screen.dart';
+import 'login_screen.dart';
+import '../services/auth_service.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -109,6 +111,19 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     super.dispose();
   }
 
+  Future<void> _logout() async {
+    await AuthService.clearLogin();
+    if (!mounted) return;
+    Navigator.of(context).pushReplacement(
+      PageRouteBuilder(
+        pageBuilder: (_, __, ___) => const LoginScreen(),
+        transitionsBuilder: (_, animation, __, child) =>
+            FadeTransition(opacity: animation, child: child),
+        transitionDuration: const Duration(milliseconds: 400),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -128,7 +143,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           ),
           _StatisticsTab(todos: _todos),
           _CalendarTab(todos: _todos),
-          const _MoreTab(),
+          _MoreTab(onLogout: _logout),
         ],
       ),
       bottomNavigationBar: NavigationBar(
@@ -802,7 +817,9 @@ class _CalendarTabState extends State<_CalendarTab> {
 // ── 더보기 탭 ──────────────────────────────────────────────────────────────
 
 class _MoreTab extends StatelessWidget {
-  const _MoreTab();
+  final VoidCallback onLogout;
+
+  const _MoreTab({required this.onLogout});
 
   @override
   Widget build(BuildContext context) {
@@ -891,11 +908,12 @@ class _MoreTab extends StatelessWidget {
               const SizedBox(height: 8),
               _MoreSection(
                 title: '계정',
-                items: const [
+                items: [
                   _MoreItem(
                     icon: Icons.logout,
                     label: '로그아웃',
                     isDestructive: true,
+                    onTap: onLogout,
                   ),
                 ],
               ),
