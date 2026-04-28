@@ -21,13 +21,21 @@ jobs:
         with:
           distribution: temurin
           java-version: '17'
+          cache: gradle
 
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.41.8'
           channel: stable
-          cache: true
+          cache: false
+
+      - name: Verify Gradle and AGP versions
+        run: |
+          echo "=== gradle-wrapper.properties ==="
+          cat android/gradle/wrapper/gradle-wrapper.properties
+          echo "=== settings.gradle ==="
+          cat android/settings.gradle
 
       - name: Get Flutter dependencies
         run: flutter pub get
