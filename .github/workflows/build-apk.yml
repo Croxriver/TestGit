@@ -40,8 +40,8 @@ jobs:
       - name: Get Flutter dependencies
         run: flutter pub get
 
-      - name: Build release APK
-        run: flutter build apk --release --split-per-abi
+      - name: Build release APK (arm64 only)
+        run: flutter build apk --release --target-platform android-arm64
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
