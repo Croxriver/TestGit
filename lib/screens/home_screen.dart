@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../models/todo.dart';
 import '../widgets/todo_item.dart';
 import 'add_todo_screen.dart';
+import 'theme_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -848,16 +849,21 @@ class _MoreTab extends StatelessWidget {
               const SizedBox(height: 24),
               _MoreSection(
                 title: '설정',
-                items: const [
-                  _MoreItem(
+                items: [
+                  const _MoreItem(
                     icon: Icons.notifications_outlined,
                     label: '알림 설정',
                   ),
                   _MoreItem(
                     icon: Icons.palette_outlined,
                     label: '테마',
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (_) => const ThemeScreen()),
+                    ),
                   ),
-                  _MoreItem(
+                  const _MoreItem(
                     icon: Icons.language_outlined,
                     label: '언어',
                   ),
@@ -945,12 +951,14 @@ class _MoreItem extends StatelessWidget {
   final String label;
   final String? trailing;
   final bool isDestructive;
+  final VoidCallback? onTap;
 
   const _MoreItem({
     required this.icon,
     required this.label,
     this.trailing,
     this.isDestructive = false,
+    this.onTap,
   });
 
   @override
@@ -968,10 +976,9 @@ class _MoreItem extends StatelessWidget {
               ),
             )
           : (!isDestructive
-              ? Icon(Icons.chevron_right,
-                  color: theme.colorScheme.outline)
+              ? Icon(Icons.chevron_right, color: theme.colorScheme.outline)
               : null),
-      onTap: () {},
+      onTap: onTap,
     );
   }
 }
